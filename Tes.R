@@ -1,0 +1,48 @@
+#data wrangling
+library(dplyr)
+
+#visualisasi data
+library(ggplot2)
+library(ggthemes)
+
+loan <- read.csv(file.choose(), header=TRUE)
+head(loan)
+glimpse(loan)
+
+ggplot(data = loan, aes(x = amount, fill = default)) +
+  geom_density(alpha = 0.5, col = F) +
+  labs(title = "Amount of Loan Distribution", X = "Amount of Loan", y = NULL, fill = "Default Status") +
+  theme_fivethirtyeight() +
+  theme(legend.position = "top",
+        legend.key.height = unit(12, "pt"),
+        legend.key.width = unit(26, "pt"))
+
+
+ggplot(data = loan, aes(x = months_loan_duration, fill = default)) +
+  geom_density(alpha = 0.5, col = F) +
+  labs(title = "Months of Loan Distribution", X = "Months of Loan", y = NULL, fill = "Default Status") +
+  theme_fivethirtyeight() +
+  theme(legend.position = "top",
+        legend.key.height = unit(12, "pt"),
+        legend.key.width = unit(26, "pt"))
+
+
+
+loan <- loan %>%
+  mutate(purpose = ifelse(purpose == "car0", "car", as.character(purpose)))
+
+loan <- loan %>%
+  mutate(purpose = as.factor(purpose))
+
+levels(loan$purpose)
+
+
+
+ggplot(data = loan, aes(x = purpose, fill = purpose)) +
+  geom_bar(show.legend = F)+
+  facet_wrap(~default)+
+  labs(title = "Default status based on Its Purpose", X = NULL, y = NULL) +
+  theme_economist_white() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1),
+        strip.background = element_rect(fill = "black"),
+        strip.text = element_text(color = "white")) 
